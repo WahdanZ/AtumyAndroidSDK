@@ -15,7 +15,6 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 
@@ -36,18 +35,16 @@ public class AtumyGcmListener extends GcmListenerService {
     @Override
     public void onMessageReceived(String from, Bundle data) {
         String message = data.getString("alert");
-        Log.d("MessageRecive",data.toString());
         //IPush pushData = new Push(data);
-        AtumyMessageReceiver atumyMessageReceiver = PushManager.getInstance().getAtumyMessageReceiver();
+        AtumyMessageReceiver atumyMessageReceiver = PushManager.getInstance(this).getAtumyMessageReceiver();
         if (atumyMessageReceiver != null)
-          atumyMessageReceiver.onMessageReceived(message);
+            atumyMessageReceiver.onMessageReceived(data);
 
 
+        if (SharedData.getInstance(this).getPrefBoolean("DefaultNotification", true)) {
+            sendNotification(message);
+        }
 
-
-
-        if(SharedData.getInstance(this).getPrefBoolean("DefaultNotification",false));
-      sendNotification(message);
     }
     // [END receive_message]
 

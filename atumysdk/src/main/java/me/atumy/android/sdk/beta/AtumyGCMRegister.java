@@ -9,20 +9,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -30,9 +26,9 @@ import java.util.Hashtable;
 import java.util.Map;
 
 public class AtumyGCMRegister extends IntentService {
-    Context mContext;
-    private  static final String push = "push/register?deviceId=";
+    private static final String push = "push/register?deviceId=";
     private static final String TAG = "RegIntentService";
+    Context mContext;
     String GCMSenderID;
     public AtumyGCMRegister() {
         super(TAG);
@@ -93,9 +89,9 @@ public class AtumyGCMRegister extends IntentService {
 
         Map<String,String> params = new HashMap<>();
         params.put("AndroidId", AtumyDeviceManager.getAndroidId(mContext));
-        params.put("AppVersion","Android "+ AtumyDeviceManager.getAppVersion(mContext));
+        params.put("AppVersion", AtumyDeviceManager.getAppVersion(mContext));
         params.put("Country", AtumyDeviceManager.getCountry(mContext));
-        params.put("OSVersion", "" + AtumyDeviceManager.getOSVersion());
+        params.put("OSVersion", "Android " + AtumyDeviceManager.getOSVersion());
         params.put("Email", AtumyDeviceManager.getEmail(mContext));
 //        Log.d("IMEI",AtumyDeviceManager.getIMEI(context));
         params.put("DeviceType", AtumyDeviceManager.getDeviceType());
@@ -108,7 +104,7 @@ public class AtumyGCMRegister extends IntentService {
         AtumyVolleyRequest request = new AtumyVolleyRequest(Request.Method.POST, push+token,new JSONObject(params).toString(), new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
-             Log.d("Reg",s);
+
             }
         }, new Response.ErrorListener() {
             @Override

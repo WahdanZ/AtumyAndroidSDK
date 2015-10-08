@@ -1,18 +1,8 @@
 package me.atumy.android.sdk.beta;
 
 import android.content.Context;
-import android.util.Log;
 
-import com.android.volley.Request.Method;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 
 /**
@@ -29,6 +19,7 @@ public class Atumy {
     {
         if (context != null) {
             mContext = context.getApplicationContext();
+            VolleyLog.DEBUG = false;
         }
     }
 
@@ -53,11 +44,9 @@ public class Atumy {
 
         mAppId = appId;
         mAppSecret = appSecret;
-       SharedData.getInstance(context).setPrefString("AppId",appId);
-       SharedData.getInstance(context).setPrefString("AppSecret",appSecret);
 
 
-       atumy.AtumyRegisterApp();
+        atumy.AtumyRegisterApp();
 
     }
 
@@ -98,10 +87,6 @@ public class Atumy {
     /**
      * Enable push.
      */
-    public static void EnablePush()
-    {
-        boolean enable = SharedData.getInstance(mContext).getPrefBoolean("enable_push", true);
-    }
 
     private void AtumyRegisterApp()
     {

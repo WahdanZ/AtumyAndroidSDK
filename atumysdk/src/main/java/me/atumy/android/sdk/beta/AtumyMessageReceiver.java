@@ -11,5 +11,5 @@ public abstract interface AtumyMessageReceiver {
      *
      * @param Message push from server
      */
-    public abstract void onMessageReceived(String Message);
+    public abstract void onMessageReceived(Bundle Message);
 }

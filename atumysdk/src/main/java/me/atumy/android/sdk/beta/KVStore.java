@@ -1,19 +1,20 @@
 package me.atumy.android.sdk.beta;
 
-import java.util.HashMap;
+import android.content.Context;
+import android.util.Log;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.Response.Listener;
-import com.android.volley.RequestQueue;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
-
-import android.content.Context;
-import android.util.Log;
+import java.util.HashMap;
 
 /**
  * The type KV store.
@@ -21,6 +22,7 @@ import android.util.Log;
  * @param <T> the type parameter
  */
 public class KVStore<T> {
+    private static final String kvStore = "kvstore/";
     private static RequestQueue queue;
     /**
      * The Request.
@@ -40,9 +42,9 @@ public class KVStore<T> {
     JSONObject value;
     private AtumyCallback callBack;
     private String sig;
-    private static final String kvStore = "kvstore/";
 
     private KVStore(Context context, String collection) {
+        VolleyLog.DEBUG = false;
         queue = Volley.newRequestQueue(context);
         this.collection = collection;
         KVStore mkvStore = this;
@@ -56,7 +58,7 @@ public class KVStore<T> {
      * @param collection the collection
      * @return the kV store
      */
-    public static KVStore init(Context context, String collection) {
+    public static KVStore getInstance(Context context, String collection) {
         return new KVStore(context, collection);
     }
 

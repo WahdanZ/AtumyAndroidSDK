@@ -1,6 +1,5 @@
 package me.atumy.android.sdk.beta;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,9 +9,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,13 +21,12 @@ import org.json.JSONObject;
  */
 public class PushManager {
     private static final String TAG = "PushManager";
-
+    private static final String Push = "";
     private static PushManager pushManager;
+    private static Context mContext;
     private String mSenderId;
     private String atumyAppToken;
-    private    static  Context mContext;
     private AtumyMessageReceiver atumyMessageReceiver;
-    private static final String Push = "";
 
 
 
@@ -37,13 +35,21 @@ public class PushManager {
     private PushManager (){
 
     }
-    protected static PushManager getInstance(){
-        PushManager pushManager = new PushManager();
-        return pushManager;
-    }
+
     private PushManager(Context context) {
         mContext = context.getApplicationContext();
-        getmSenderId();
+        VolleyLog.DEBUG = false;
+        if (!context.getClass().getName().equals("me.atumy.android.sdk.beta.AtumyGcmListener")) {
+            getmSenderId();
+            Log.d("PushManager", "not GCM");
+        }
+    }
+
+    protected static PushManager getInstance(){
+        pushManager = new PushManager();
+        VolleyLog.DEBUG = false;
+
+        return pushManager;
     }
 
     /**
@@ -75,6 +81,7 @@ public class PushManager {
 //           Toast.makeText(mContext, "AtumyRegisterApp",Toast.LENGTH_LONG).show();
 
             // Start IntentService to register this application with GCM.
+            Log.d("PushManager", "CallGCM");
              Intent intent = new Intent(mContext, AtumyGCMRegister.class);
              mContext.startService(intent);
         }
@@ -92,7 +99,7 @@ public class PushManager {
     public boolean isPushEnabled()
     {
         return SharedData.getInstance(this.mContext).getPrefBoolean(
-                "enable_push", true);
+                "DefaultNotification", true);
     }
 
     /**
@@ -118,6 +125,7 @@ public class PushManager {
           public void onResponse(String s) {
               try {
                   senderId[0] = new JSONObject(s).getString("senderId");
+                  Log.d("PushManager", senderId[0]);
                   SharedData.getInstance(mContext).setPrefString("senderId",senderId[0]);
                   //noinspection AccessStaticViaInstance
                   AtumyRegisterApp();
@@ -177,7 +185,6 @@ public class PushManager {
      */
     public void setPushCallback(Class<? extends Activity> intentName)
     {
-        Log.d("CalssName",intentName.getName());
         SharedData.getInstance(mContext).setPrefString("PushCallback", intentName.getName());
     }
 
@@ -201,6 +208,7 @@ public class PushManager {
         return SharedData.getInstance(mContext).getPrefBoolean(
                 "vibrationEnabled", true);
     }
+
 
     /**
      * Message receiver.

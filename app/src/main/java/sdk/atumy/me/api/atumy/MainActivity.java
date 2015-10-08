@@ -6,9 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,7 +21,6 @@ import org.json.JSONObject;
 import me.atumy.android.sdk.beta.Atumy;
 import me.atumy.android.sdk.beta.AtumyCallback;
 import me.atumy.android.sdk.beta.AtumyErrorCallback;
-import me.atumy.android.sdk.beta.AtumyGcmListener;
 import me.atumy.android.sdk.beta.AtumyMessageReceiver;
 import me.atumy.android.sdk.beta.KVStore;
 import me.atumy.android.sdk.beta.PushManager;
@@ -39,16 +38,19 @@ public class MainActivity extends ActionBarActivity {
         AppSecret = (EditText)findViewById(R.id.AppSecret);
         Atumy.init(this, "b210b522fb0c4154bd476d804680dad4", "0513eacafc7049439948b534058ef412");
         PushManager pushManager = PushManager.getInstance(this);
+        pushManager
+                .setPushCallback(MainActivity.class);
+        pushManager.setDefaultNotification(true);
         pushManager.MessageReceiver(new AtumyMessageReceiver() {
 
 
             @Override
-            public void onMessageReceived(String Message) {
-
+            public void onMessageReceived(Bundle Message) {
+                Log.d("Myt", Message.toString());
             }
         });
 
-        KVStore kvStore = KVStore.init(this,"MyAtumy");
+        KVStore kvStore = KVStore.getInstance(this, "MyAtumy");
         kvStore.get("Ahmed", new AtumyCallback() {
             @Override
             public void onReceive(JSONObject value) {
